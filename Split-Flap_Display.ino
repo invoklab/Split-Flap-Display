@@ -1,4 +1,7 @@
-//Includes the Arduino Stepper Library
+// Single Split Flap Display
+// Written by Thoby Noorhalim for Invok Lab
+// 7 June 2021
+
 #include <Stepper.h>
 #include <Unistep2.h>
 
@@ -21,7 +24,6 @@ bool printable = false;
 
 // Creates an instance of stepper class
 // Pins entered in sequence IN1-IN3-IN2-IN4 for proper step sequence
-//Stepper myStepper = Stepper(stepsPerRevolution, 4, 6, 5, 7);
 Unistep2 myStepper(4,5,6,7, 4096, 1000);
 
 void homing(){
@@ -73,9 +75,7 @@ void goToLetter(char letter){
 }
 
 void setup() {
-  // Nothing to do (Stepper Library sets pins as outputs)
   Serial.begin(9600);
-//  myStepper.setSpeed(10);
   pinMode(sensor, INPUT);
   
 }
@@ -89,6 +89,7 @@ void loop() {
     if(Serial.available() > 0){
         // read byte
         incomingByte = Serial.read();
+        printable = true;
 
         // Check if letter entered can be displayed
         // Check based on ASCII table
@@ -96,25 +97,16 @@ void loop() {
             (incomingByte >= 91 && incomingByte <= 96)){
             // can't be displayed, ignore letter
             Serial.println("ERROR, letter can't be displayed");
-            !printable;
-        }
-        else if(incomingByte >= 'A' && incomingByte <= 'Z'){
+            incomingByte = incomingByte + 'z' + 1;
+        } else if(incomingByte >= 'A' && incomingByte <= 'Z'){
             // uppercase detected, convert to lowercase
             incomingByte = incomingByte + 32;
-            printable = true;
-        } 
-        else if (incomingByte == ' '){
-            incomingByte = incomingByte + 'z' + 1;
-            printable = true;
         }
         
         if(printable){
             Serial.println("Incoming byte is "+(String)incomingByte);
-
             letter = (char)incomingByte;
-
             Serial.println("Entered letter is "+(String)letter);
-
             goToLetter(letter);
             delay(500);
         }    
