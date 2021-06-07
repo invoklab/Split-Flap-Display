@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "port": "/dev/tty.usbmodem14101",
+    "programmer": "arduino:avrisp",
+    "sketch": "Split-Flap_Display.ino"
+}
